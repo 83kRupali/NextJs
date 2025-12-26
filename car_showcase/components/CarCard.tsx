@@ -1,0 +1,193 @@
+// import { CarProps } from "@/types";
+// import { calculateCarRent, generateCarImageUrl } from "@/utils";
+// import React, { useState } from "react";
+// import CustomButton from "./CustomButton";
+// import {CarDetails} from "./index";
+
+
+
+// interface CarCardProps {
+//   car: CarProps;
+// }
+
+// const CarCard = ({ car }: CarCardProps) => {
+//   const { city_mpg, year, make, model, transmission, drive } = car;
+
+//   const [isOpen, setIsOpen] = useState(false);
+
+//   const carRent = calculateCarRent(city_mpg, year);
+
+//   return (
+//     <div className="car-card group">
+//       <div className="car-card__content">
+//         <h2 className="car-card__content-title">
+//           {make}
+//           {model}
+//         </h2>
+//       </div>
+
+//       <p className="flex mt-6 text-[32px] font-extrabold">
+//         <span className="self-start text-[14px] font-semibold">$</span>
+//         {carRent}
+//         <span className="self-end text-[14px] font-semibold">/day</span>
+//       </p>
+
+//       <div className="relative w-full h-40 my-3 object-contain">
+//         <Image
+//           src={generateCarImageUrl(car)}
+//           width={50}
+//           height={50}
+//           alt="car model"
+//           fill
+//           priority
+//           className="object-contain"
+//         />
+//       </div>
+
+//       <div className="relative flex w-full mt-2">
+//         <div className="flex group-hover:invisible w-full justify-between text-gray">
+//           <div className="flex flex-col justify-center items-center gap-2">
+//             <Image
+//               src="/steering-wheel.svg"
+//               width={20}
+//               height={20}
+//               alt="steering wheel"
+//             />
+//             <p className="text-[14px]">
+//               {transmission === "a" ? "Automatic" : "Manual"}
+//             </p>
+//           </div>
+//         </div>
+
+//         <div className="flex group-hover:invisible w-full justify-between text-gray">
+//           <div className="flex flex-col justify-center items-center gap-2">
+//             <Image
+//               src="/tire.svg"
+//               width={20}
+//               height={20}
+//               alt="steering wheel"
+//             />
+//             <p className="text-[14px]">{drive.toLocaleUpperCase()}</p>
+//           </div>
+//         </div>
+
+//         <div className="flex group-hover:invisible w-full justify-between text-gray">
+//           <div className="flex flex-col justify-center items-center gap-2">
+//             <Image src="/gas.svg" width={20} height={20} alt="steering wheel" />
+//             <p className="text-[14px]">{city_mpg} MPG</p>
+//           </div>
+//         </div>
+
+//         <div className="car-card__btn-container">
+//           <CustomButton
+//             title="View More"
+//             containerStyles="w-full py-[16px] rounded-full bg-primary-blue"
+//             textStyles="text-white text-[14px] leading-[17px] font-bold"
+//             rightIcon="/right-arrow.svg"
+//             handleClick={() => setIsOpen(true)}
+//           />
+//         </div>
+//       </div>
+
+//       <CarDetails isOpen={isOpen} closeModel={()=>
+//         setIsOpen(false)} car={car}/>
+//     </div>
+//   );
+// };
+
+// export default CarCard;
+
+
+
+
+
+
+
+
+
+
+
+
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
+import { CarProps } from "@/types";
+import { calculateCarRent, generateCarImageUrl } from "@/utils";
+import CustomButton from "./CustomButton";
+import CarDetails from "./CarDetails";
+
+interface CarCardProps {
+  car: CarProps;
+}
+
+const CarCard = ({ car }: CarCardProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const rent = calculateCarRent(car.city_mpg, car.year);
+
+  return (
+    <div className="car-card group relative">
+      {/* Title */}
+      <div className="car-card__content">
+        <h2 className="car-card__content-title">
+          {car.make} {car.model}
+        </h2>
+      </div>
+
+      {/* Price */}
+      <p className="car-card__price">
+        <span className="car-card__price-dollar">$</span>
+        {rent}
+        <span className="car-card__price-day">/day</span>
+      </p>
+
+      {/* Image */}
+      <div className="car-card__image">
+        <Image
+          src={generateCarImageUrl(car)}
+          fill
+          alt={`${car.make} ${car.model}`}
+          className="object-contain"
+        />
+      </div>
+
+      {/* Specs */}
+      <div className="car-card__icon-container">
+        <div className="car-card__icon">
+          <Image src="/steering-wheel.svg" width={20} height={20} alt="drive" />
+          <p className="car-card__icon-text">
+            {car.transmission === "a" ? "Automatic" : "Manual"}
+          </p>
+        </div>
+
+        <div className="car-card__icon">
+          <Image src="/tire.svg" width={20} height={20} alt="drive" />
+          <p className="car-card__icon-text">{car.drive.toUpperCase()}</p>
+        </div>
+
+        <div className="car-card__icon">
+          <Image src="/gas.svg" width={20} height={20} alt="fuel" />
+          <p className="car-card__icon-text">{car.city_mpg} MPG</p>
+        </div>
+      </div>
+
+      {/* Hover Button */}
+      <div className="car-card__btn-container">
+        <CustomButton
+          title="View More"
+          containerStyles="w-full bg-primary-blue text-white rounded-full"
+          handleClick={() => setIsOpen(true)}
+        />
+      </div>
+
+      {/* Modal */}
+      <CarDetails
+        car={car}
+        isOpen={isOpen}
+        closeModal={() => setIsOpen(false)}
+      />
+    </div>
+  );
+};
+
+export default CarCard;
